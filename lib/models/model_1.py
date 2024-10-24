@@ -48,6 +48,7 @@ class job:
         CONN.commit()
         self.id = CURSOR.lastrowid
         type(self).all[self.id] = self
+
     # create row
     @classmethod
     def create(cls, title):
@@ -57,10 +58,11 @@ class job:
         return job
 
     #get all
+    @classmethod
     def get_all(cls):
-        '''return all rows from the applicants table'''
+        '''return all rows from the jobs table'''
         sql = '''
-            select * from applicants
+            select * from jobs
         '''
 
         rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
@@ -68,8 +70,36 @@ class job:
     
     @classmethod
     def get_instance_from_db(cls, row):
-        job = cls.all.get
+        job = cls.all.get(row[0])
+        if job:
+            job.title = row[1]
+        else:
+            job = cls(row[1])
+            job.id = row[0]
+        return job
     #find by ID
+    @classmethod
+    def find_by_id(cls, id):
+        sql = '''
+            SELECT * from jobs
+            WHERE id = ?
+            '''
+        row  = CURSOR.execute(sql, (id,)).fetchone()
+        return cls.get_instance_from_db(row) if row else None
+    
+    #delete
+    def delete(self):
+        sql = '''
+            DELETE from jobs 
+            where id = ?
+            '''
+        CURSOR.execute(sql,(self.id,))
+        CONN.commit()
+
+        del type(self).all[self.id]
+        self.id = None
+        
+
 
 #many class
 class Applicants:
