@@ -3,11 +3,13 @@ from models.__init__ import CONN, CURSOR
 
 #creating the first model class
 #one class
-class Job_board:
-    def __init__(self, job_title, id = None):
+class job:
+
+    all = {} #dictionary of jobs saved to db
+    def __init__(self, title, id = None):
         
         self.id = id
-        self.job_title = job_title
+        self.title = title
      
     
     #create table
@@ -16,7 +18,7 @@ class Job_board:
         '''will persist the attributes of job instances'''
         sql = """
             CREATE TABLE IF NOT EXISTS jobs(
-            id INT PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
             title TEXT
             )
         """
@@ -32,6 +34,8 @@ class Job_board:
         """
         CURSOR.execute(sql)
         CONN.commit()
+    
+    
     #save
     def save(self):
         '''save instance to db'''
@@ -40,9 +44,10 @@ class Job_board:
             VALUES (?)
         '''
 
-        CONN.execute(sql, (self.name))
+        CURSOR.execute(sql, (self.title,))
         CONN.commit()
-
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
     # create row
     @classmethod
     def create(cls, title):
@@ -52,18 +57,30 @@ class Job_board:
         return job
 
     #get all
+    def get_all(cls):
+        '''return all rows from the applicants table'''
+        sql = '''
+            select * from applicants
+        '''
 
+        rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
+        return [row for row in rows ]
+    
+    @classmethod
+    def get_instance_from_db(cls, row):
+        job = cls.all.get
     #find by ID
 
 #many class
 class Applicants:
-    all = [] #list of applicants
+    all = {}  #dictionary of applicants saved to db
     def __init__(self, name, job_id, id = None):
         self.name = name
-        self.job_id = job_id
-        self._id = id
-        Applicants.all.append(self)
-        
+        self.job_id = job_id #foreign key
+        self._id = id #job id
+        Applicants.all.append(self) #adding applicants to all list
+
+    #repr placeholder so I can ensure this is working
     def __repr__(self):
         return (
             f"<Applicant {self.id}: {self.name} " +
@@ -95,11 +112,8 @@ class Applicants:
         CURSOR.execute(sql)
         CONN.commit()
 
-    #create
-    @classmethod
-    def create(cls, name, job_id)
+    
     #save
-   
     def save(self):
         '''save instance to db'''
         sql = '''
@@ -107,9 +121,29 @@ class Applicants:
             VALUES (?, ?)
         '''
 
-        CONN.execute(sql, (self.name, self.job_id))
+        CURSOR.execute(sql, (self.name, self.job_id))
         CONN.commit()
+
+        self.id = CURSOR.lastrowid
+        type(self).all[self.id] = self
+
+    #create
+    @classmethod
+    def create(cls, title, job_id):
+        '''create instance and save to db'''
+        job = cls(title, job_id)
+        job.save()
+        return job
     #get all
+    @classmethod
+    def get_all(cls):
+        '''return all rows from the applicants table'''
+        sql = '''
+            select * from applicants
+        '''
+
+        rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
+        return [row for row in rows ]
 
     #find by ID
 
