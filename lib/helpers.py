@@ -5,24 +5,38 @@ def helper_1():
     job.create(job_title)
     print(f"Job with title {job_title} created!")
 
-def helper_2():
+def helper_2(): #getting all jobs
     print("Retrieving jobs. . .")
-    job.get_all() #handled the print inside of the function so I can format the output better
+    for job_item in job.get_all():
+        print(f"Job Id: {job_item.id} | Job Title: {job_item.title}")
 
-def helper_3():
-    find_job = input("Please enter job ID: ")
-    job.find_by_id(find_job) #handled the print inside of the function so I can format the output better
+def helper_3(): #gets job by ID
+    try:
+        find_job = int(input("Please enter job ID: "))
+        job_item = job.find_by_id(find_job)
+        print(f"Job with ID: {job_item.id} | Job Title: {job_item.title}")
+    except:
+        print("Please enter an integer")
 
-def helper_4():
-    job_applicants = input("Please enter job ID: ")
-    job.find_by_id(job_applicants).applicants()
+def helper_4(): # fetch job by application number
+    try:
+        id = int(input("Please enter job ID: "))
+        applications = job.find_by_id(id).applicants()
+        for applicant in applications:
+            print(f"--- \nApplication ID: {applicant.id}\nApplicant Name: {applicant.name}\nJob ID: {applicant.job_id}\n")
+        print(applications)
+    except:
+        print("Please enter an integer")
 
 def helper_5():
-    id = input("Enter ID of job you wish to delete: ")
-    if item :=  job.find_by_id(id):
-        item.delete()
-    else:
-        print("Job with that ID does not exist")
+    try:
+        id = int(input("Enter ID of job you wish to delete: "))
+        if item :=  job.find_by_id(id):
+            item.delete()
+        else:
+            print("Job with that ID does not exist")
+    except:
+        print("Please enter an integer")
 
 def helper_6(): #create new application
     name = input("Enter name")

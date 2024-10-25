@@ -91,8 +91,6 @@ class job:
         '''
         
         rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
-        for row in rows:
-            print(f"Job Id: {row[0]} | Job Title: {row[1]}")
         return [cls.get_instance_from_db(row) for row in rows]
     
     @classmethod
@@ -114,9 +112,8 @@ class job:
             WHERE id = ?
             '''
         row  = CURSOR.execute(sql, (id,)).fetchone()
-
         if row:
-            print(f"Job with ID: {cls.get_instance_from_db(row).id} | Job Title: {cls.get_instance_from_db(row).title}")
+            
             return cls.get_instance_from_db(row) 
         else:
             None
@@ -133,9 +130,8 @@ class job:
         rows = CURSOR.fetchall()
         if self:
             print(f"Fetching applicants for {self.title} position")
-        return [
-            Applicants.get_instance_from_db(row) for row in rows
-        ]
+            
+        return([Applicants.get_instance_from_db(row) for row in rows])
 
 
 #many class
