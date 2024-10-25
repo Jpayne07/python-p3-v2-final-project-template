@@ -10,8 +10,7 @@ from helpers import (
     helper_6,
     helper_7,
     helper_8,
-    # helper_8,
-    # helper_9,
+    helper_9,
     helper_10
 )
 
@@ -38,10 +37,11 @@ def main():
             helper_7()
         elif choice == "8":
             helper_8()
-        # elif choice == "9":
-        #     helper_9()
+        elif choice == "9":
+            helper_9()
         elif choice == "10":
             helper_10()
+      
         
 
 
@@ -56,8 +56,9 @@ def menu():
     print("6. Create new application: ")
     print("7. Fetch all applications: ")
     print("8. Fetch application id: ")
-    print("9. Fetch applications by job id: ")
-    print("10. Delete application: ")
+    print("9. Delete application: ")
+    print("10. Batch Delete application: ")
+    
 
 
 if __name__ == "__main__":
