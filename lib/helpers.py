@@ -24,7 +24,7 @@ def helper_5():
     else:
         print("Job with that ID does not exist")
 
-def helper_6():
+def helper_6(): #create new application
     name = input("Enter name")
     try:
         job_id = int(input("Enter job ID"))
@@ -33,8 +33,24 @@ def helper_6():
     except ValueError:
         print("Invalid input. Please enter an integer.")
 
-def helper_7():
+def helper_7(): #fetch applications
     Applicants.get_all()
+
+def helper_8(): #fetch application by id
+    try:
+        id =  int(input("Please enter the application ID: "))
+        Applicants.find_by_id(id)
+    except ValueError:
+        print("Invalid input. Please enter an integer.")
+
+def helper_10(): #Delete app
+    try:
+        id =  int(input("Please enter the job id: "))
+        job_app = Applicants.find_by_id(id)
+        Applicants.delete(job_app)
+    except ValueError:
+        print("Invalid input. Please enter an integer.")
+
     
 
 
