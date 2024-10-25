@@ -1,3 +1,4 @@
+# lib/models/model_1.py
 #handling imports
 from models.__init__ import CONN, CURSOR
 
@@ -69,6 +70,19 @@ class job:
         job = cls(title)
         job.save()
         return job
+    
+    #delete
+    def delete(self):
+        sql = '''
+            DELETE from jobs 
+            where id = ?
+            '''
+        CURSOR.execute(sql,(self.id,))
+        CONN.commit()
+        del type(self).all[self.id]
+        self.id = None
+
+
 
     #get all
     @classmethod
@@ -77,9 +91,11 @@ class job:
         sql = '''
             select * from jobs
         '''
-
+        
         rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
-        return [row for row in rows ]
+        for row in rows:
+            print(f"Job Id: {row[0]} | Job Title: {row[1]}")
+            return [cls.get_instance_from_db(row)]
     
     @classmethod
     def get_instance_from_db(cls, row):
@@ -89,6 +105,7 @@ class job:
         else:
             job = cls(row[1])
             job.id = row[0]
+            cls.all[job.id] = job
         return job
     
     #find by ID
@@ -101,22 +118,12 @@ class job:
         row  = CURSOR.execute(sql, (id,)).fetchone()
 
         if row:
-            print(f"Fetched row by id: {id}")
+            print(f"Job with ID: {cls.get_instance_from_db(row).id} | Job Title: {cls.get_instance_from_db(row).title}")
             return cls.get_instance_from_db(row) 
         else:
             None
     
-    #delete
-    def delete(self):
-        sql = '''
-            DELETE from jobs 
-            where id = ?
-            '''
-        CURSOR.execute(sql,(self.id,))
-        CONN.commit()
-
-        del type(self).all[self.id]
-        self.id = None
+   
         
     def applicants(self):
         sql = '''
@@ -127,7 +134,7 @@ class job:
 
         rows = CURSOR.fetchall()
         if self:
-            print(f"Fetching applicants")
+            print(f"Fetching applicants for {self.title} position")
         return [
             Applicants.get_instance_from_db(row) for row in rows
         ]
@@ -252,7 +259,6 @@ class Applicants:
         row  = CURSOR.execute(sql, (id,)).fetchone()
 
         if row:
-            print(f"Fetched row by id: {id}")
             return cls.get_instance_from_db(row) 
         else:
             None

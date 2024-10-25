@@ -10,17 +10,6 @@ from models.model_1 import job, Applicants
 
 job.create_table()
 Applicants.create_table()
-
-job.create("Marketer")
-job.create("SEO Man")
-Applicants.create("Jacob", 1)
-Applicants.create("Mark", 1)
-Applicants.create("James", 1)
-Applicants.create("Jordan", 2)
-
-
-
 ipdb.set_trace()
-
 Applicants.drop_table()
 job.drop_table()
