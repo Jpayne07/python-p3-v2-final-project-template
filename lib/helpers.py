@@ -24,6 +24,19 @@ def helper_5():
     else:
         print("Job with that ID does not exist")
 
+def helper_6():
+    name = input("Enter name")
+    try:
+        job_id = int(input("Enter job ID"))
+        print("The entered number is:", job_id)
+        Applicants.create(name, int(job_id))
+    except ValueError:
+        print("Invalid input. Please enter an integer.")
+
+def helper_7():
+    Applicants.get_all()
+    
+
 
 
 

@@ -82,8 +82,6 @@ class job:
         del type(self).all[self.id]
         self.id = None
 
-
-
     #get all
     @classmethod
     def get_all(cls):
@@ -95,7 +93,7 @@ class job:
         rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
         for row in rows:
             print(f"Job Id: {row[0]} | Job Title: {row[1]}")
-            return [cls.get_instance_from_db(row)]
+        return [cls.get_instance_from_db(row) for row in rows]
     
     @classmethod
     def get_instance_from_db(cls, row):
@@ -233,7 +231,9 @@ class Applicants:
         '''
 
         rows = CURSOR.execute(sql).fetchall() #store all selected rows as tuples
-        return [row for row in rows ]
+        for row in rows:
+            print(f"Application ID: {row[0]} | Job Title: {row[1]} | Department: {job.find_by_id(row[2]).title}")
+        return [cls.get_instance_from_db(row) for row in rows]
 
     @classmethod
     def get_instance_from_db(cls, row):
