@@ -2,62 +2,37 @@
 
 from helpers import (
     exit_program,
-    helper_1,
-    helper_2,
-    helper_3,
-    helper_4,
-    helper_5,
-    helper_6,
-    helper_7,
-    helper_8,
-    helper_9,
-    helper_10
+    create_new_job,
+    view_all_jobs,
+    create_new_application,
+    fetch_all_applications
 )
 
 
-def main():
+def main():#
+    # choice = ""
+    menu()
     while True:
-        menu()
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            helper_1()
-        elif choice == "2":
-            helper_2()
-        elif choice == "3":
-            helper_3()
-        elif choice == "4":
-            helper_4()
-        elif choice == "5":
-            helper_5()
-        elif choice == "6":
-            helper_6()
-        elif choice == "7":
-            helper_7()
-        elif choice == "8":
-            helper_8()
-        elif choice == "9":
-            helper_9()
-        elif choice == "10":
-            helper_10()
-      
         
-
-
+        choice = input("> ")
+        if choice == "1":
+            exit_program()
+        elif choice == "2":
+            create_new_job(menu)
+        elif choice == "3":
+            view_all_jobs(menu)
+        elif choice == "4":
+            create_new_application(menu)
+        elif choice == "5":
+            fetch_all_applications(menu)
+      
 def menu():
     print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Create a new job posting")
-    print("2. Fetch all job postings")
-    print("3. Fetch job by id: ")
-    print("4. Fetch job applicants by job id: ")
-    print("5. Delete job by job id: ")
-    print("6. Create new application: ")
-    print("7. Fetch all applications: ")
-    print("8. Fetch application id: ")
-    print("9. Delete application: ")
-    print("10. Batch Delete application: ")
+    print("1. Exit the program")
+    print("2. Create a new job posting")
+    print("3. Fetch all job postings")
+    print("4. Create new application: ")
+    print("5. Fetch all applications: ")
     
 
 
