@@ -4,7 +4,6 @@ from helpers import (
     exit_program,
     create_new_job,
     view_all_jobs,
-    fetch_all_applications
 )
 
 
@@ -20,15 +19,12 @@ def main():#
             create_new_job(menu)
         elif choice == "3":
             view_all_jobs(menu)
-        elif choice == "4":
-            fetch_all_applications(menu)
       
 def menu():
     print("Please select an option:")
     print("1. Exit the program")
     print("2. Create a new job posting")
     print("3. Fetch all job postings")
-    print("4. Fetch all applications: ")
     
 
 

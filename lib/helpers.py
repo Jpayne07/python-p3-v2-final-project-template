@@ -13,31 +13,49 @@ def back(menu):
             print("Invalid input. Please try again.")
 
 def print_job_list():
+    i=1
     for job in Job.get_all():
-        print(f"{job.id}. {job.title}")
+        
+        print(f"{i}. {job.title}")
+        i += 1
+
+def view_all_jobs(menu): #getting all jobs
+    print("---\nRetrieving jobs. . .\n")
+    print_job_list()
+    view_applicants(menu, current_job=None)    
         
 def view_applicants(menu, current_job=None):
-    try:
-        id = int(input("---\n\nEnter the job ID you wish to see more information on\n"))
-    except ValueError:
-        print("Invalid input. Please enter a valid job ID.")
-        back(menu)
-        return
+    while True:
+        try:
+            # Get user input for job number and ensure it's a valid integer
+            id = int(input("---\n\nEnter the job # you wish to see more information on\n"))
+        except ValueError:
+            # Handle case where input is not an integer
+            print("Invalid input. Please enter a valid job #.")
+            back(menu)
+            return
 
-    for job in Job.get_all():
-        if id == job.id:
-            current_job = job
-            print(f"---\nWhat information would you like to know about position {job.title}?")
+        jobs = Job.get_all()
+
+        # Adjust for 1-based indexing: Check if the job number is within valid range
+        if 1 <= id <= len(jobs):
+            # Find the job (adjust index to 0-based by subtracting 1)
+            current_job = jobs[id - 1]
+            print(f"---\nWhat information would you like to know about position {current_job.title}?")
             print(f"\n1. View Applicants: ")
             print(f"\n2. Create Application: ")
             print(f"\n3. Delete Job: ")
+            
             try:
+                # Get user input for the choice (1, 2, or 3)
                 choice = int(input("---\nEnter Choice: "))
             except ValueError:
+                # Handle invalid input for the choice
                 print("Invalid input. Please enter a number.")
                 back(menu)
                 return
 
+            # Handle user's choice
             if choice == 1:
                 applicants = current_job.applicants()
                 if len(applicants) > 0:
@@ -45,49 +63,47 @@ def view_applicants(menu, current_job=None):
                     for i, applicant in enumerate(applicants, start=1):
                         if applicant:
                             print(f"\n{i}. {applicant.name}")
+                    # choice_confirmation = input("---\nWould you like to create a new application?Y/N\n").upper()
+                    # if choice_confirmation == "Y":
+                    applicant_choice(menu, current_job, applicants)
+                        
+                    back(menu)
+                    return
                 else:
                     print("No Applicants")
                 back(menu)
                 return
             
             elif choice == 2:
-                create_new_application(menu, job)
+                create_new_application(menu, current_job)
+                break
 
             elif choice == 3:
-                choice_confirmation = input(f"---\nAre you sure you wish to delete this job: {current_job.title}? Y/N\n").upper()
-                if choice_confirmation == "Y":
-                    print(f"{current_job.title} deleted")
-                    current_job.delete()
-                    print("POOF")
-                back(menu)
-                return
+                delete_job_confirmation(menu, current_job)
+                break
 
             else:
                 print("Invalid choice.")
                 back(menu)
                 return
+        else:
+            # Handle case where job number is out of bounds
+            print(f"No job found with the number {id}. Please try again.")
+            continue
 
-
-     
 def create_new_job(menu):
     job_title = input("Please enter the job title: ")
     Job.create(job_title)
     print(f"Job with title {job_title} created!")
     menu()
 
-def view_all_jobs(menu): #getting all jobs
-    print("---\nRetrieving jobs. . .\n")
-    print_job_list()
-    view_applicants(menu, current_job=None)      
+  
 
 def create_new_application(menu, job): #create new application1
     name = input("Enter name: ")
     try:
-        job_id = job.id#take in a job object instead of job id
-        new_app = Applicants.create(name, int(job_id))
-        new_app
-        print(f"---\nJob application #{new_app.id} created")
-        print(f"---\nApplication for {Job.find_by_id(job_id).title} received.\n")
+        Applicants.create(name, job.id)
+        print(f"---\nApplication for {job.title} received.\n")
     except ValueError:
         print("Invalid input. Please enter an integer.")
     back(menu)
@@ -139,54 +155,55 @@ def handle_app_view_or_delete(menu, app_choice, app): #Delete app
     except ValueError:
         print("Invalid input. Please enter an integer.")
 
+def delete_job_confirmation(menu, current_job):
+    choice_confirmation = input(f"---\nAre you sure you wish to delete this job: {current_job.title}? Y/N\n").upper()
+    if choice_confirmation == "Y":
+        print(f"{current_job.title} deleted")
+        current_job.delete()
+        print("POOF")
+    else:
+        back(menu)
+    
 
 def exit_program():
     print("Goodbye!")
     exit()
 
-# def helper_3(menu):  # Gets job by ID
-    # print(f"Enter job you'd like to review (by ID)")
-    # print_job_list()
-    # job_found = False  # Initialize job_found before the loop
-    # while not job_found:
-    #     try:
-    #         id = int(input("---\n Please enter job ID: \n---"))
-    #         job_item = Job.find_by_id(id)
-    #         if job_item:  # Check if the job is found
-    #             print(f"Job with ID: {job_item.id} | Job Title: {job_item.title}")
-    #             view_applicants(menu, job_item)
-    #             job_found = True  # Exit loop once the job is found
-    #         else:
-    #             print("No job found with that ID. Please try again.")
-    #     except ValueError:
-    #         print("Please enter a valid integer for the job ID.")
+def applicant_choice(menu, current_job, applicants):
+    try:
+        # Prompt the user for their next action
+        choice_confirmation = int(input("---\nWhat would you like to do next?\n1. Create new application\n2. Delete application\n"))
+    except ValueError:
+        print("---\nInvalid input. Please enter a number (1 or 2).")
+        return
 
+    if choice_confirmation == 1:
+        # Call function to create a new application
+        create_new_application(menu, current_job)
+    elif choice_confirmation == 2:
+        if not applicants:
+            print("---\nNo applicants available to delete.")
+            return
         
-
-    #     back(menu)
+        # Display applicants and prompt for the number of the applicant to delete
+        for i, applicant in enumerate(applicants, start=1):
+            print(f"---\n{i}. {applicant.name}")
         
+        try:
+            # Ask for the applicant number to delete
+            app_id = int(input("---\nChoose the number of the applicant you'll delete: "))
+        except ValueError:
+            print("---\nInvalid input. Please enter a valid number.")
+            return
 
-
-# def helper_4(): # fetch job by application number
-#     try:
-#         id = int(input("Please enter job ID: "))
-#         applications = Job.find_by_id(id).applicants()
-#         for applicant in applications:
-#             print(f"--- \nApplication ID: {applicant.id}\nApplicant Name: {applicant.name}\nJob ID: {applicant.job_id}\n")
-#         print(applications)
-#     except:
-#         print("Please enter an integer")
-
-# def helper_5(): # delete job by ID
-    # try:
-    #     print_job_list()
-    #     title = int(input("\n---\nEnter name of job you wish to delete: "))
-    #     for job in Job.find_by_id():
-    #         if title == job.title:
-    #             print(f"\n---\nJob - {job.title} deleted")
-    #             job.delete()
-                
-    #     else:
-    #         print("Job with that name does not exist")
-    # except:
-    #     print("Please enter an integer")
+        # Check if the selected number is within the range of applicants
+        if 1 <= app_id <= len(applicants):
+            applicant_to_delete = applicants[app_id - 1]
+            print(f"---\nDeleting applicant: {applicant_to_delete.name}")
+            # Call the method to delete the selected applicant
+            applicant_to_delete.delete()
+            print("---\nApplicant deleted successfully.")
+        else:
+            print("---\nInvalid applicant number. Please try again.")
+    else:
+        print("---\nInvalid choice. Please select 1 or 2.")
