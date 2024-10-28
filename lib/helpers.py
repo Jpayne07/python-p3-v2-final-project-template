@@ -15,9 +15,11 @@ def back(menu):
 def print_job_list():
     i=1
     for job in Job.get_all():
-        
-        print(f"{i}. {job.title}")
-        i += 1
+        if (job):
+            print(f"{i}. {job.title}")
+            i += 1
+        else:
+            print("No jobs available")
 
 def view_all_jobs(menu): #getting all jobs
     print("---\nRetrieving jobs. . .\n")
@@ -67,7 +69,6 @@ def view_applicants(menu, current_job=None):
                     # if choice_confirmation == "Y":
                     applicant_choice(menu, current_job, applicants)
                         
-                    back(menu)
                     return
                 else:
                     print("No Applicants")
@@ -96,8 +97,6 @@ def create_new_job(menu):
     Job.create(job_title)
     print(f"Job with title {job_title} created!")
     menu()
-
-  
 
 def create_new_application(menu, job): #create new application1
     name = input("Enter name: ")
@@ -161,6 +160,7 @@ def delete_job_confirmation(menu, current_job):
         print(f"{current_job.title} deleted")
         current_job.delete()
         print("POOF")
+        back(menu)
     else:
         back(menu)
     
@@ -172,7 +172,7 @@ def exit_program():
 def applicant_choice(menu, current_job, applicants):
     try:
         # Prompt the user for their next action
-        choice_confirmation = int(input("---\nWhat would you like to do next?\n1. Create new application\n2. Delete application\n"))
+        choice_confirmation = int(input("---\nWhat would you like to do next?\n1. Create new application\n2. Delete application\n3. Go back\n"))
     except ValueError:
         print("---\nInvalid input. Please enter a number (1 or 2).")
         return
@@ -203,7 +203,10 @@ def applicant_choice(menu, current_job, applicants):
             # Call the method to delete the selected applicant
             applicant_to_delete.delete()
             print("---\nApplicant deleted successfully.")
+            back(menu)
         else:
             print("---\nInvalid applicant number. Please try again.")
+    elif choice_confirmation == 3:
+        back(menu)
     else:
         print("---\nInvalid choice. Please select 1 or 2.")
