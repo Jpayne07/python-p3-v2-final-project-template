@@ -9,6 +9,25 @@ October 28, 2024
 
 This document is a CLI ORM which takes input from a user and maps the input into objects which are then pushed into a database. It has 2 tables and 2 object classes.
 
+## How to Use CLI
+
+This application can be used and navigated via the command line interface. By pressing the corresponding command a user can:
+1. Exit the program
+2. Create a new job
+3. View all jobs
+    - See more info on a specific job
+        - View applicants
+        - Create new application
+        - Delete Job
+4. View all company applications at a glance
+
+Additionally a user can go back to the main menu or exit the program at each completed step.
+    
+You can run the template CLI with `python lib/cli.py`.
+---
+## Debug and Reseed
+This document has a debugger which will reset the database and all associated data. For a clean working implementation, run `python lib/debug.py`
+
 ## Jobs table and Object class
 This table contains all of the jobs at the company. It contains the job name and ID.
 
@@ -39,22 +58,7 @@ pipenv shell
 
 ---
 
-## How to Use CLI
 
-This application can be used and navigated via the command line interface. By pressing the corresponding command a user can:
-1. Exit the program
-2. Create a new job
-3. View all jobs
-    - See more info on a specific job
-        - View applicants
-        - Create new application
-        - Delete Job
-4. View all company applications at a glance
-
-Additionally a user can go back to the main menu or exit the program at each completed step.
-    
-You can run the template CLI with `python lib/cli.py`.
----
 
 ## Resources
 
