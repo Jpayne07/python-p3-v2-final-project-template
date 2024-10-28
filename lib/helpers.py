@@ -3,7 +3,7 @@ from models.job import Job
 from models.applicants import Applicants
 from helpers_application import view_job_applicants
 from helpers_application import create_new_application
-def back(menu):
+def back(menu): #this is the back function to return to main menu
     while True:
         prompt = input("\n--- Press B to return to main menu, 0 to exit: ").upper()
         if prompt == 'B':
@@ -14,7 +14,7 @@ def back(menu):
         else:
             print("Invalid input. Please try again.")
 
-def print_job_list():
+def print_job_list():#this prints all of the jobs
     i=1
     for job in Job.get_all():
         if (job):
@@ -23,12 +23,12 @@ def print_job_list():
         else:
             print("No jobs available")
 
-def view_all_jobs(menu): #getting all jobs
+def view_all_jobs(menu): #getting all jobs and opening the next prompt
     print("---\nRetrieving jobs. . .\n")
     print_job_list()
     view_applicants(back, menu, current_job=None)    
         
-def view_applicants(back, menu, current_job=None):
+def view_applicants(back, menu, current_job=None): #this views all applicants of a job
     while True:
         try:
             id = int(input("---\n\nEnter the job # you wish to see more information on\n"))
@@ -72,13 +72,11 @@ def view_applicants(back, menu, current_job=None):
             print(f"No job found with the number {id}. Please try again.")
             continue
 
-
-
-def create_new_job(menu):
-    job_title = input("Please enter the job title: ")
-    Job.create(job_title)
+def create_new_job(menu): #tree 2.0
+    job_title = input("Please enter the job title: ") #2.1
+    Job.create(job_title) #creates the job with the input from the previous line
     print(f"Job with title {job_title} created!")
-    menu()
+    menu() #gives the user the menu again
 
 
 def handle_app_view_or_delete(menu, app_choice, app): #Delete app
@@ -107,8 +105,6 @@ def delete_job_confirmation(menu, current_job):
 def exit_program():
     print("Goodbye!")
     exit()
-
-
 
 def view_jobs_printer(current_job):
     print(f"---\nWhat information would you like to know about position {current_job.title}?")

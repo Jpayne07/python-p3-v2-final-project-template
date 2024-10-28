@@ -1,6 +1,6 @@
  
 from models.applicants import Applicants
-def view_job_applicants(back, menu, current_job):
+def view_job_applicants(back, menu, current_job): #view_applicants = > specific applicant = > CHOOSING APPLICANT TO VIEW
     applicants = current_job.applicants()
     if len(applicants) > 0:
         print("---\nAPPLICANTS")
@@ -14,7 +14,7 @@ def view_job_applicants(back, menu, current_job):
         print("No Applicants")
     back(menu)
 
-def create_new_application(back, menu, job): #create new application1
+def create_new_application(back, menu, job):
     name = input("Enter name: ")
     try:
         Applicants.create(name, job.id)
@@ -23,26 +23,21 @@ def create_new_application(back, menu, job): #create new application1
         print("Invalid input. Please enter an integer.")
     back(menu)
 
-def applicant_choice(back, menu, current_job, applicants):
+def applicant_choice(back, menu, current_job, applicants): #view_applicants = > specific applicant = > CHOOSING APPLICANT TO VIEW 
     try:
-        # Prompt the user for their next action
         choice_confirmation = int(input("---\nWhat would you like to do next?\n1. Create new application\n2. Delete application\n3. Go back\n"))
     except ValueError:
         print("---\nInvalid input. Please enter a number (1 or 2).")
         return
 
     if choice_confirmation == 1:
-        # Call function to create a new application
-        create_new_application(menu, current_job)
-    elif choice_confirmation == 2:
+        create_new_application(menu, current_job) #view_applicants = > specific applicant = > choosing applicant to view = > CREATING NEW APPLICANT
+    elif choice_confirmation == 2: #view_applicants = > specific applicant = > choosing applicant to view = > DELETING APPLICANT
         if not applicants:
             print("---\nNo applicants available to delete.")
             return
-        
-        # Display applicants and prompt for the number of the applicant to delete
         for i, applicant in enumerate(applicants, start=1):
             print(f"---\n{i}. {applicant.name}")
-        
         try:
             # Ask for the applicant number to delete
             app_id = int(input("---\nChoose the number of the applicant you'll delete: "))
